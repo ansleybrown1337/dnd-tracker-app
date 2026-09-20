@@ -11,17 +11,29 @@ layer, a versioned SQLite schema, a small catalog, and automated tests. Flet
 1.0.0 and its development tools are pinned so that local and CI behavior use
 the same release.
 
-With Python 3.12 and [uv](https://docs.astral.sh/uv/) installed, prepare the
-locked environment with:
+Install Python 3.12 and [uv](https://docs.astral.sh/uv/) once on the development
+computer. On macOS, uv can be installed with `brew install uv` or its official
+standalone installer. Open a new terminal and verify `uv --version`, then
+prepare the locked environment with:
 
 ```shell
 uv sync --locked --group dev
 ```
 
+This creates or reuses the repository's `.venv`. Run it after cloning and when
+`pyproject.toml` or `uv.lock` changes; it is not required for every shell
+session.
+
 Launch the desktop application with:
 
 ```shell
 uv run flet run src/main.py
+```
+
+For an already-synced checkout, the environment can also be invoked directly:
+
+```shell
+./.venv/bin/flet run src/main.py
 ```
 
 Run the repository checks with:

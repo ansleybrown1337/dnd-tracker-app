@@ -49,12 +49,50 @@ remain possible future work.
 
 ## Run from source
 
-Install Python 3.12 and [uv](https://docs.astral.sh/uv/), then run:
+### First-time setup
+
+Install Python 3.12, then install
+[uv](https://docs.astral.sh/uv/getting-started/installation/) once on your
+computer:
+
+```shell
+brew install uv
+```
+
+Alternatively, use uv's official standalone installer:
+
+```shell
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Open a new terminal after installation and confirm that `uv --version` works.
+From the repository directory, create the project environment and install the
+locked dependencies:
 
 ```shell
 uv sync --locked --group dev
+```
+
+`uv sync` creates or updates `.venv`; it does not need to be repeated for every
+terminal session unless the dependency files change.
+
+### Launch the app
+
+From the repository directory, run:
+
+```shell
 uv run flet run src/main.py
 ```
+
+If this checkout has already been synced but `uv` is temporarily unavailable
+on your shell's `PATH`, launch the existing environment directly:
+
+```shell
+./.venv/bin/flet run src/main.py
+```
+
+The direct `.venv` command works only after the first-time dependency setup has
+created that environment.
 
 Application data is stored locally on the computer and the prototype does not
 use accounts, networking, or cloud synchronization. The full development and
