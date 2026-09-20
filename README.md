@@ -1,4 +1,4 @@
-# AJ's Character Manager
+![AJ's Character Manager — Plan your heroes, track their journey, bring your adventures to life](banner.png)
 
 An open source character manager for D&D players, with offline rules support
 and homebrew content creation.
