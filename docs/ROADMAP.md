@@ -12,6 +12,10 @@ not a promise.
 
 ## Phase 1: Prove the Application
 
+**Status:** The source-run vertical slice is implemented and passes its macOS
+development workflow. Packaged macOS Apple Silicon and Windows x64 acceptance
+testing remains before the phase meets its completion criteria.
+
 ### Objective
 
 Prove that Flet, SQLite, and the proposed catalog boundary can support an

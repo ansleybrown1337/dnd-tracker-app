@@ -1,53 +1,57 @@
 # Development
 
-AJ's Character Manager targets Python 3.12 and will use uv for environments and
-dependency locking. The approved application stack also includes Flet, SQLite,
-pytest, and Ruff.
+AJ's Character Manager targets Python 3.12 and uses uv for environments and
+dependency locking. The application stack also includes Flet, SQLite, pytest,
+and Ruff.
 
-## Current Phase 0 setup
+## Current Phase 1 setup
 
-The repository currently contains documentation, `pyproject.toml`, a Python
-version declaration, and a package marker. It does not contain a Flet entry
-point, SQLite schema, application tests, or a runnable desktop application.
+The repository contains a runnable Flet entry point, an application and domain
+layer, a versioned SQLite schema, a small catalog, and automated tests. Flet
+1.0.0 and its development tools are pinned so that local and CI behavior use
+the same release.
 
-The project metadata currently has no runtime dependencies. Flet is deferred
-until Phase 1, when its version can be selected and tested as part of the first
-packaged vertical slice. The development dependency group contains pytest and
-Ruff.
-
-With Python 3.12 and [uv](https://docs.astral.sh/uv/) installed, the Phase 0
-environment can be prepared with:
+With Python 3.12 and [uv](https://docs.astral.sh/uv/) installed, prepare the
+locked environment with:
 
 ```shell
-uv sync --group dev
+uv sync --locked --group dev
 ```
 
-Useful checks for the current repository are:
+Launch the desktop application with:
 
 ```shell
-uv run ruff check src
-uv run python -c "import aj_character_manager"
+uv run flet run src/main.py
 ```
 
-There are intentionally no executable tests yet. Running pytest before Phase 1
-will report that no tests were collected.
-
-## Expected Phase 1 workflow
-
-After Phase 1 begins, its first changes should add a pinned Flet runtime
-dependency, real tests, and an application entry point. The expected daily
-commands will then be documented from the behavior that actually exists,
-likely including:
+Run the repository checks with:
 
 ```shell
-uv sync --group dev
-uv run ruff check .
-uv run pytest
+uv run ruff check src tests
+uv run ruff format --check src tests
+uv run pytest -q
 ```
 
-Development launch and platform build commands will be added only after the
-corresponding entry point and packaging configuration exist. Developers should
-not infer support from this document before those changes land.
+The app creates its database on first launch. `AJCM_DATA_DIR` can override the
+data directory for development and testing. Otherwise the app uses Flet's data
+directory when supplied, then a platform-specific user data directory. Local
+databases and Flet build output are ignored by Git.
+
+## Desktop builds
+
+Flet packaging metadata lives in `pyproject.toml`. A manual GitHub Actions
+workflow builds unsigned prototype archives for macOS and Windows. It does not
+publish a release, sign binaries, or notarize the macOS app.
+
+To attempt a local platform build with the required native toolchain installed:
+
+```shell
+uv run flet build macos --python-version 3.12
+uv run flet build windows --python-version 3.12
+```
+
+Run only the command for the host platform. Phase 1 acceptance still requires
+running the defining persistence workflow against both packaged artifacts.
 
 SQLite is part of Python's standard library. Application databases and Flet
 build output must remain outside version control, as configured in

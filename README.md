@@ -3,29 +3,30 @@
 An open source character manager for D&D players, with offline rules support
 and homebrew content creation.
 
-> **Project status:** Early development. The repository currently contains the
-> project foundation and design documentation; there is no runnable application
-> or downloadable release yet.
+> **Project status:** Phase 1 desktop prototype. The core campaign, character,
+> and inventory workflow is runnable from source. There is no downloadable
+> release yet, and packaged builds still need cross-platform acceptance testing.
 
 AJ's Character Manager is planned as a desktop-first application that keeps
 campaign and character data on the user's computer. The initial targets are
 Windows x64 and macOS on Apple Silicon.
 
-## Intended features
+## Current prototype
 
 - Campaigns with multiple characters
-- Playable character sheets with durable local persistence
-- Searchable, legally redistributable 2024 rules reference content
-- Inventory built from reusable reference definitions and character-owned items
-- GUI tools for common custom and homebrew content
-- Importable and exportable content packs and campaigns
+- Basic character fields, HP, and notes stored in local SQLite
+- A party dashboard and editable character screen
+- Searchable inventory with 15 manually reviewed SRD 5.2.1 weapons
+- Separate reusable item definitions and character-owned inventory instances
+- Inventory quantity and notes, including add, edit, and remove workflows
+- A simple GUI creator for local custom items
 
-Development is deliberately incremental. Phase 1 will test the desktop UI,
-SQLite persistence, packaging, and a small inventory workflow before the
-project invests in a full rules engine or catalog. Phase 2 aims to make the app
-useful during ordinary play. Phase 3 covers project maturation and possible
-advanced features. See the [roadmap](docs/ROADMAP.md) for the boundaries and
-completion criteria.
+Development is deliberately incremental. This prototype tests the desktop UI,
+SQLite persistence, packaging configuration, and a small inventory workflow
+before the project invests in a full rules engine or catalog. Phase 2 aims to
+make the app useful during ordinary play. Phase 3 covers project maturation and
+possible advanced features. See the [roadmap](docs/ROADMAP.md) for the exact
+boundaries and completion criteria.
 
 ## Rules and custom content
 
@@ -34,10 +35,11 @@ The initial rules target is the current 2024 revision of fifth edition. SRD
 gameplay reference and redistribution authority have different roles; see
 [Source of Truth](docs/SOURCE_OF_TRUTH.md).
 
-Homebrew content is a first-class goal. Users should eventually be able to
-create ordinary custom content in the GUI and share content packs when they
-have the rights to do so. Briarwood is planned as a Phase 2 example pack using
-the same generic tools available to everyone. It is not application logic.
+Homebrew content is a first-class goal. Phase 1 supports local custom item
+definitions. Later phases can expand GUI authoring and add portable content
+packs when users have the rights to share them. Briarwood is planned as a Phase
+2 example pack using the same generic tools available to everyone. It is not
+application logic.
 
 ## Technology and platforms
 
@@ -45,12 +47,20 @@ The approved stack is Python 3.12, Flet, SQLite, uv, pytest, and Ruff. Windows
 x64 and macOS Apple Silicon are the first packaging targets. Other platforms
 remain possible future work.
 
-## Development
+## Run from source
 
-Phase 0 establishes documentation and tooling only. The expected development
-workflow is described in [Development](docs/DEVELOPMENT.md). Contributions are
-welcome; read [Contributing](CONTRIBUTING.md) before opening an issue or pull
-request.
+Install Python 3.12 and [uv](https://docs.astral.sh/uv/), then run:
+
+```shell
+uv sync --locked --group dev
+uv run flet run src/main.py
+```
+
+Application data is stored locally on the computer and the prototype does not
+use accounts, networking, or cloud synchronization. The full development and
+build workflow is described in [Development](docs/DEVELOPMENT.md).
+Contributions are welcome; read [Contributing](CONTRIBUTING.md) before opening
+an issue or pull request.
 
 Additional documentation:
 

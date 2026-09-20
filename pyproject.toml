@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "aj-character-manager"
-version = "0.0.0"
+version = "0.1.0"
 description = "An open source character manager for D&D players, with offline rules support and homebrew content creation."
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
@@ -17,10 +17,14 @@ classifiers = [
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3.12",
 ]
-dependencies = []
+dependencies = [
+  "flet==1.0.0",
+]
 
 [dependency-groups]
 dev = [
+  "flet-cli==1.0.0",
+  "flet-desktop==1.0.0",
   "pytest>=8.3",
   "ruff>=0.11",
 ]
@@ -38,3 +42,18 @@ src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.flet]
+product = "AJ's Character Manager"
+artifact = "ajs-character-manager"
+org = "dev.ajscharactermanager"
+bundle_id = "dev.ajscharactermanager.app"
+company = "AJ's Character Manager contributors"
+copyright = "Copyright © 2026 AJ's Character Manager contributors"
+
+[tool.flet.app]
+path = "src"
+module = "main.py"
+
+[tool.flet.macos]
+target_arch = ["arm64"]

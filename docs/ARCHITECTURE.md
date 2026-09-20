@@ -1,9 +1,10 @@
 # Architecture
 
-This document records the intended architectural direction. During Phase 0,
-only the repository foundation and an empty Python package exist. The UI,
-application services, domain model, catalog, database, and import/export
-components described below are planned and have not been implemented.
+This document records the architectural direction and the Phase 1 vertical
+slice now implemented under `src/aj_character_manager/`. The Flet UI,
+application services, domain records and validation, catalog boundary, and
+SQLite adapter exist. A broader rules engine, content packs, and import/export
+remain planned work.
 
 ## Design goals
 
@@ -17,20 +18,20 @@ components described below are planned and have not been implemented.
 
 ## Intended layers
 
-### Flet UI
+### Flet UI — implemented for Phase 1
 
 The UI will render screens, collect input, and present validation and errors.
 Event handlers will call application use cases rather than issue SQL or contain
 rules calculations. Flet-specific state should remain presentation state; it
 must not become the authoritative character record.
 
-### Application and use cases
+### Application and use cases — implemented for Phase 1
 
 This layer will coordinate actions such as creating a campaign, updating HP,
 searching catalog definitions, and adding an item to inventory. It will define
 transaction boundaries and work through repository interfaces.
 
-### Domain and rules
+### Domain and rules — domain implemented, rules planned
 
 The domain layer will represent gameplay concepts and enforce invariants that
 do not depend on a UI or database. Phase 1 needs only a small domain surface.
@@ -38,14 +39,14 @@ The rules layer should grow in Phase 2 as real calculations and choices are
 implemented. Unsupported or ambiguous mechanics should remain visible as text
 or assisted/manual actions rather than receive invented automation.
 
-### Catalog and content system
+### Catalog and content system — catalog boundary implemented
 
 The catalog will expose searchable reference definitions independently of
 their source. A small reviewed equipment fixture will exercise this interface
 in Phase 1. A larger normalized SRD catalog, provenance pipeline, and generic
 content packs are Phase 2 concerns.
 
-### SQLite persistence
+### SQLite persistence — implemented for Phase 1
 
 SQLite will store mutable campaign and character state and the identities of
 the definitions that state references. Persistence adapters will implement
@@ -53,7 +54,7 @@ interfaces used by the application layer. Schema migrations, backups, and
 upgrade behavior begin with Phase 1 and must be tested against real packaged
 applications.
 
-### Import and export
+### Import and export — planned
 
 Import/export will operate through validated application services rather than
 copying arbitrary database files. The eventual formats must preserve content
@@ -91,10 +92,9 @@ derivative rather than silently rewriting the source. Campaigns will need
 stable references so a content update does not unexpectedly change an existing
 character. The detailed versioning and upgrade UX are Phase 2 or later work.
 
-## Expected package direction
+## Current package shape
 
-Once justified by Phase 1 work, implementation code is expected to separate
-UI, application, domain, content, and infrastructure concerns under
-`src/aj_character_manager/`. Phase 0 deliberately does not create empty
-subpackages for them. Package boundaries should emerge with tested behavior,
-not placeholder files.
+The small prototype keeps each concern in a focused module rather than adding
+empty subpackages: `ui.py`, `service.py`, `domain.py`, `catalog.py`,
+`database.py`, and `paths.py`. This is enough separation to test the catalog
+and persistence boundaries without committing Phase 2 to a deep package tree.
