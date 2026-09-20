@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Environments and package/build output
+.venv/
+venv/
+dist/
+build/
+.flet/
+
+# Local application data
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+app-data/
+local-data/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Temporary content work
+.tmp/
+tmp/
+content-extraction/
+local-sources/
+
+# Private Briarwood development source; do not publish or delete locally.
+/Introduction to the world.docx

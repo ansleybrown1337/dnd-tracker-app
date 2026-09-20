@@ -1,0 +1,100 @@
+# Architecture
+
+This document records the intended architectural direction. During Phase 0,
+only the repository foundation and an empty Python package exist. The UI,
+application services, domain model, catalog, database, and import/export
+components described below are planned and have not been implemented.
+
+## Design goals
+
+- Keep character and campaign data local and durable.
+- Keep Flet and SQLite details out of core rules and use-case code.
+- Treat rules/reference content differently from mutable play state.
+- Let bundled and custom content flow through the same application boundaries.
+- Add automation only where the application can behave predictably and explain
+  the result.
+- Prove each boundary with a small vertical slice before generalizing it.
+
+## Intended layers
+
+### Flet UI
+
+The UI will render screens, collect input, and present validation and errors.
+Event handlers will call application use cases rather than issue SQL or contain
+rules calculations. Flet-specific state should remain presentation state; it
+must not become the authoritative character record.
+
+### Application and use cases
+
+This layer will coordinate actions such as creating a campaign, updating HP,
+searching catalog definitions, and adding an item to inventory. It will define
+transaction boundaries and work through repository interfaces.
+
+### Domain and rules
+
+The domain layer will represent gameplay concepts and enforce invariants that
+do not depend on a UI or database. Phase 1 needs only a small domain surface.
+The rules layer should grow in Phase 2 as real calculations and choices are
+implemented. Unsupported or ambiguous mechanics should remain visible as text
+or assisted/manual actions rather than receive invented automation.
+
+### Catalog and content system
+
+The catalog will expose searchable reference definitions independently of
+their source. A small reviewed equipment fixture will exercise this interface
+in Phase 1. A larger normalized SRD catalog, provenance pipeline, and generic
+content packs are Phase 2 concerns.
+
+### SQLite persistence
+
+SQLite will store mutable campaign and character state and the identities of
+the definitions that state references. Persistence adapters will implement
+interfaces used by the application layer. Schema migrations, backups, and
+upgrade behavior begin with Phase 1 and must be tested against real packaged
+applications.
+
+### Import and export
+
+Import/export will operate through validated application services rather than
+copying arbitrary database files. The eventual formats must preserve content
+identity, provenance, and licensing metadata. Their detailed schemas are
+intentionally deferred until Phase 2.
+
+## Definitions and instances
+
+A reference definition describes a reusable kind of thing. An instance records
+how one campaign or character owns and uses it.
+
+For example, the catalog's **Trident definition** contains the shared name,
+category, damage, properties, cost, weight, source, and provenance. A
+**character's Trident instance** refers to that definition and stores mutable
+facts such as quantity, inventory notes, and equipped state.
+
+Definitions should not be copied into every character record, and changing a
+character's quantity must not mutate the shared definition. This distinction
+allows the Phase 1 fixture to be replaced by a normalized catalog without
+redesigning inventory ownership.
+
+## Content and state boundaries
+
+The intended data categories are:
+
+| Category | Purpose | Mutation policy |
+| --- | --- | --- |
+| Bundled redistributable content | Reviewed rules and reference definitions shipped with the application | Versioned application content, not edited as character state |
+| Installed custom packs | Imported definitions with their own identity, provenance, and license | Installed or removed through content workflows; releases treated as stable |
+| User-created local content | Definitions authored by the user through the GUI | Editable locally; export/share only when rights permit |
+| Campaign and character state | HP, notes, inventory ownership, choices, and other play state | Mutable and persisted immediately through application use cases |
+
+Editing an installed or bundled definition should eventually create a local
+derivative rather than silently rewriting the source. Campaigns will need
+stable references so a content update does not unexpectedly change an existing
+character. The detailed versioning and upgrade UX are Phase 2 or later work.
+
+## Expected package direction
+
+Once justified by Phase 1 work, implementation code is expected to separate
+UI, application, domain, content, and infrastructure concerns under
+`src/aj_character_manager/`. Phase 0 deliberately does not create empty
+subpackages for them. Package boundaries should emerge with tested behavior,
+not placeholder files.
